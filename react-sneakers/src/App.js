@@ -1,5 +1,6 @@
 // import logo from '../public/img/icon-logo.svg';
 import React from 'react';
+import axios from 'axios';
 import Card from './components/Card'
 import Header from './components/Header';
 import Drawer from './components/Drawer';
@@ -8,39 +9,66 @@ import Drawer from './components/Drawer';
 
 function App() {
   const [items, setItems] = React.useState([]);
+  const [cardItems, setCardItems] = React.useState([]);
+  const [favorites, setFavorites] = React.useState([]);
+  const [searchValue, setSearchValue] = React.useState('');
   const [cardOpened, setCardOpened] = React.useState(false);
 
   React.useEffect(() => {
-    fetch('https://64f8c8d6824680fd21800ccb.mockapi.io/Items').then(res => {
-      return res.json();
-    }).then(json => {setItems(json)});
+    // fetch('https://64f8c8d6824680fd21800ccb.mockapi.io/Items').then(res => {
+    //   return res.json();
+    // }).then(json => {setItems(json)});
+
+    axios.get('https://64f8c8d6824680fd21800ccb.mockapi.io/Items').then(res => setItems(res.data));
+    axios.get('https://64f8c8d6824680fd21800ccb.mockapi.io/Card').then(res => {setCardItems(res.data)});
   }, []);
+
+  const onAddToCard = (obj) => {
+    axios.post('https://64f8c8d6824680fd21800ccb.mockapi.io/Card', obj);
+    setCardItems(prev => [...prev, obj]);
+  }
+
+  const onAddToFavorite = (obj) => {
+    axios.post('https://64f8c8d6824680fd21800ccb.mockapi.io/Card', obj); // Change!!
+    setFavorites(prev => [...prev, obj]);
+  }
+
+  const onRemoveItem = (id) => {
+    axios.delete(`https://64f8c8d6824680fd21800ccb.mockapi.io/Card/${id}`);
+    setCardItems(prev => prev.filter(item => item.id !== id));
+  }
+
+  const onChangeSearchInput = (event) => {
+    console.log(event.target.value);
+    setSearchValue(event.target.value)
+  }
 
 
   return (
     <div className='wrapper clear'>
-      {cardOpened && <Drawer onClose={() => setCardOpened(false)}/>}
+      {cardOpened && <Drawer items={cardItems} onClose={() => setCardOpened(false)} onRemove={onRemoveItem}/>}
       <Header onClickCard={() => setCardOpened(true)}/>
       <div className='content p-40'>
         <div className='d-flex align-center justify-between mb-40'>
-          <h1>Все кроссовки</h1>
+          <h1>{searchValue ? `Поиск по запросу: "${searchValue}"`: 'Все кроссовки'}</h1>
         
           <div className='search-block d-flex'>
             <img src='/img/icon-search.svg' alt='Search'/>
-            <input placeholder='Поиск...'/>
+            {searchValue && <img onClick={() => setSearchValue('')} className='clear cu-p' src='/img/btn-remove-cursor.svg' alt='btn-clear'/>}
+            <input onChange={onChangeSearchInput} value={searchValue} placeholder='Поиск...'/>
           </div>
         </div>
         
 
         <div className='cards d-flex'>
-          {items.map(obj => 
+          {items.filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase())).map(item => 
             <Card 
-              title={obj.title}
-              price={obj.price}
-              imageUrl={obj.imageUrl}
-              onPlus={() => console.log('Нажали плюс')}
-              onFavorite={() => console.log('Добавили в закладки')}
-              // key={obj.imageUrl}
+              title={item.title}
+              price={item.price}
+              imageUrl={item.imageUrl}
+              onPlus={(obj) => onAddToCard(obj)}
+              onFavorite={(obj) => onAddToFavorite(obj)}
+              key={item.imageUrl}
             />
           )}
 
