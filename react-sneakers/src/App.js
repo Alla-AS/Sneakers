@@ -1,10 +1,12 @@
 // import logo from '../public/img/icon-logo.svg';
 import React from 'react';
+import {Route, Routes} from 'react-router-dom';
 import axios from 'axios';
-import Card from './components/Card'
+import Home from './pages/Home';
+import Favorites from './pages/Favorites';
 import Header from './components/Header';
 import Drawer from './components/Drawer';
-// import './App.css';
+import AppContext from './context';
 
 
 function App() {
@@ -13,24 +15,56 @@ function App() {
   const [favorites, setFavorites] = React.useState([]);
   const [searchValue, setSearchValue] = React.useState('');
   const [cardOpened, setCardOpened] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     // fetch('https://64f8c8d6824680fd21800ccb.mockapi.io/Items').then(res => {
     //   return res.json();
     // }).then(json => {setItems(json)});
 
-    axios.get('https://64f8c8d6824680fd21800ccb.mockapi.io/Items').then(res => setItems(res.data));
-    axios.get('https://64f8c8d6824680fd21800ccb.mockapi.io/Card').then(res => {setCardItems(res.data)});
+    async function fetchData() {
+      // setIsLoading(true);
+      const cartResponse = await axios.get('https://64f8c8d6824680fd21800ccb.mockapi.io/Card');
+      const favoritesResponse = await axios.get('https://64ffffb718c34dee0cd4208d.mockapi.io/Favorites');
+      const itemsResponse = await axios.get('https://64f8c8d6824680fd21800ccb.mockapi.io/Items');
+
+      setIsLoading(false);
+      setItems(itemsResponse.data);
+      setCardItems(cartResponse.data);
+      setFavorites(favoritesResponse.data);
+    }
+
+    fetchData();
   }, []);
 
   const onAddToCard = (obj) => {
-    axios.post('https://64f8c8d6824680fd21800ccb.mockapi.io/Card', obj);
-    setCardItems(prev => [...prev, obj]);
+    try {
+      if (cardItems.find(item => item.id === obj.id)) {
+        axios.delete(`https://64f8c8d6824680fd21800ccb.mockapi.io/Card/${obj.id}`);
+        setCardItems(prev => prev.filter(item => Number(item.id) !== Number(obj.id)));
+      } else {
+        axios.post('https://64f8c8d6824680fd21800ccb.mockapi.io/Card', obj);
+        setCardItems(prev => [...prev, obj]);
+      }
+    } catch {
+      alert('Не удалось добавить в корзину');
+    }
   }
 
-  const onAddToFavorite = (obj) => {
-    axios.post('https://64f8c8d6824680fd21800ccb.mockapi.io/Card', obj); // Change!!
-    setFavorites(prev => [...prev, obj]);
+  const onAddToFavorite = async (obj) => {
+    try {
+      if (favorites.find(item => Number(item.id) === Number(obj.id))) {
+        axios.delete(`https://64ffffb718c34dee0cd4208d.mockapi.io/Favorites/${obj.id}`);
+        setFavorites(prev => prev.filter(item => item.id !== obj.id));
+      } else {
+        // axios.post('https://64ffffb718c34dee0cd4208d.mockapi.io/Favorites', obj); // Change!!
+        const {data} = await axios.post('https://64ffffb718c34dee0cd4208d.mockapi.io/Favorites', obj);
+        setFavorites(prev => [...prev, data]);
+      }
+    } catch (error) {
+      alert('Не удалось добавить в фавориты');
+    }
+    
   }
 
   const onRemoveItem = (id) => {
@@ -43,89 +77,42 @@ function App() {
     setSearchValue(event.target.value)
   }
 
+  const isItemAdded = (id) => {
+    return cardItems.some((obj) => obj.id === id);
+  }
 
   return (
-    <div className='wrapper clear'>
-      {cardOpened && <Drawer items={cardItems} onClose={() => setCardOpened(false)} onRemove={onRemoveItem}/>}
-      <Header onClickCard={() => setCardOpened(true)}/>
-      <div className='content p-40'>
-        <div className='d-flex align-center justify-between mb-40'>
-          <h1>{searchValue ? `Поиск по запросу: "${searchValue}"`: 'Все кроссовки'}</h1>
-        
-          <div className='search-block d-flex'>
-            <img src='/img/icon-search.svg' alt='Search'/>
-            {searchValue && <img onClick={() => setSearchValue('')} className='clear cu-p' src='/img/btn-remove-cursor.svg' alt='btn-clear'/>}
-            <input onChange={onChangeSearchInput} value={searchValue} placeholder='Поиск...'/>
-          </div>
-        </div>
-        
+    <AppContext.Provider value={{items, cardItems, favorites, isItemAdded, onAddToFavorite, onAddToCard, setCardOpened, setCardItems, cardItems}}>
+      <div className='wrapper clear'>
+        {cardOpened && <Drawer items={cardItems} onClose={() => setCardOpened(false)} onRemove={onRemoveItem}/>}
+        <Header onClickCard={() => setCardOpened(true)}/>
 
-        <div className='cards d-flex'>
-          {items.filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase())).map(item => 
-            <Card 
-              title={item.title}
-              price={item.price}
-              imageUrl={item.imageUrl}
-              onPlus={(obj) => onAddToCard(obj)}
-              onFavorite={(obj) => onAddToFavorite(obj)}
-              key={item.imageUrl}
-            />
-          )}
 
-{/* 
-          <div className='card'>
-            <div className='favorite'>
-              <img src='/img/icon-heart-unlike.svg' alt='icon-heart-unlike'/>
-            </div>
-            <img width={133} height={112} src='/img/sneakers/2.jpg' alt=''></img>
-            <h5>Мужские Кроссовки Nike Blazer Mid Suede</h5>
-            <div className='d-flex justify-between align-center'>
-              <div className='d-flex flex-column'>
-                <span>Цена:</span>
-                <b>12 999 руб.</b>
-              </div>
-              <button className='button'>
-                <img width={11} height={11} src='/img/plus.svg' alt='icon-plus'></img>
-              </button>
-            </div>
-          </div>
+        <Routes>
+          <Route path="/" element={
+            <Home
+              items={items}
+              cardItems={cardItems}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              onChangeSearchInput={onChangeSearchInput}
+              isLoading={isLoading}
+            />}
+          />
+        </Routes>
 
-          <div className='card'>
-            <div className='favorite'>
-              <img src='/img/icon-heart-unlike.svg' alt='icon-heart-unlike'/>
-            </div>
-            <img width={133} height={112} src='/img/sneakers/3.jpg' alt=''></img>
-            <h5>Мужские Кроссовки Nike Blazer Mid Suede</h5>
-            <div className='d-flex justify-between align-center'>
-              <div className='d-flex flex-column'>
-                <span>Цена:</span>
-                <b>12 999 руб.</b>
-              </div>
-              <button className='button'>
-                <img width={11} height={11} src='/img/plus.svg' alt='icon-plus'></img>
-              </button>
-            </div>
-          </div>
-
-          <div className='card'>
-            <div className='favorite'>
-              <img src='/img/icon-heart-unlike.svg' alt='icon-heart-unlike'/>
-            </div>
-            <img width={133} height={112} src='/img/sneakers/4.jpg' alt=''></img>
-            <h5>Мужские Кроссовки Nike Blazer Mid Suede</h5>
-            <div className='d-flex justify-between align-center'>
-              <div className='d-flex flex-column'>
-                <span>Цена:</span>
-                <b>12 999 руб.</b>
-              </div>
-              <button className='button'>
-                <img width={11} height={11} src='/img/plus.svg' alt='icon-plus'></img>
-              </button>
-            </div>
-          </div> */}
-        </div>
+        <Routes>
+          <Route path="/favorites" element={
+            <Favorites
+                // items={favorites}
+                // onAddToFavorite={onAddToFavorite}
+                // onAddToCard={onAddToCard}
+            />}
+          />
+        </Routes>
       </div>
-    </div>
+    </AppContext.Provider>
+    
   );
 }
 
