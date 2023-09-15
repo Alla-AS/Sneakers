@@ -1,33 +1,35 @@
 import React from "react";
-import AppContext from "../context";
-import Info from "./Info";
 import axios from "axios";
 
-function Drawer({onClose, onRemove, items = []}) {
+import Info from "../Info";
+import { useCart } from "../../hooks/useCart";
+
+import styles from './Drawer.module.scss'
+
+function Drawer({onClose, onRemove, items = [], opened}) {
+  const {cartItems, setCartItems, totalPrice} = useCart();
   const [isOrderComplete, setIsOrderComplete] = React.useState(false);
   const [orderId, setOrderId] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const {cardItems, setCardItems} = React.useContext(AppContext);
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+ 
 
 
   const onClickOrder = async () => {
     try {
       setIsLoading(true);
-      const {data} = await axios.post('https://64ffffb718c34dee0cd4208d.mockapi.io/Orders', {items: cardItems});
-      // cardItems.forEach(item => {
-      //   await axios.delete(`https://64f8c8d6824680fd21800ccb.mockapi.io/Card/${item.id}`);
-      // })
-      for (let i = 0; i < cardItems.length; i++) {
-        const item = cardItems[i];
-        await axios.delete(`https://64f8c8d6824680fd21800ccb.mockapi.io/Card/${item.id}`);
+      const {data} = await axios.post('https://64ffffb718c34dee0cd4208d.mockapi.io/Orders', {items: cartItems});
+      for (let i = 0; i < cartItems.length; i++) {
+        const item = cartItems[i];
+        await axios.delete(`https://64f8c8d6824680fd21800ccb.mockapi.io/Cart/${item.id}`);
         await delay(1000);
       }
       setOrderId(data.id);
       setIsOrderComplete(true);
-      setCardItems([]);
+      setCartItems([]);
     } catch (error) {
       alert('Не удалось создать заказ');
     }
@@ -36,15 +38,15 @@ function Drawer({onClose, onRemove, items = []}) {
   }
 
   return (
-    <div className='overlay'>
-      <div className='drawer'>
+    <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ''}`}>
+      <div className={styles.drawer}>
         <h2 className='mb-30 d-flex justify-between'>
           Корзина <img onClick={onClose} className='remove-btn cu-p' src='/img/btn-remove-cursor.svg' alt='btn-remove'/>
         </h2>
 
         {items.length > 0 ? (
         <div className="d-flex flex-column flex">
-        <div className='items'>
+        <div className='items flex'>
           {
             items.map((obj) => (
               <div key={obj.id} className='cart-item d-flex align-center mb-20'>
@@ -63,12 +65,12 @@ function Drawer({onClose, onRemove, items = []}) {
             <li className='d-flex'>
                 <span>Итого</span>
                 <div></div>
-                <b>21 498 руб. </b>
+                <b>{totalPrice} руб. </b>
             </li>
             <li className='d-flex'>
                 <span>Налог 5%: </span>
                 <div></div>
-                <b>1074 руб. </b>
+                <b>{(totalPrice*0.05).toFixed(2)} руб. </b>
             </li>
           </ul>
           <button disabled={isLoading} onClick={onClickOrder} className='greenButton'>Оформить заказ <img src='/img/icon-arrow.svg' alt='icon-arrow'/></button>

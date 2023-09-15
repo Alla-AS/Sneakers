@@ -2,7 +2,7 @@ import React from "react";
 import AppContext from "../context";
 
 const Info = ({title, description, image}) => {
-  const {setCardOpened} = React.useContext(AppContext);
+  const {setCartOpened} = React.useContext(AppContext);
 
     return (
         <div className="cartEmpty d-flex align-center justify-center flex-column flex">
@@ -14,7 +14,7 @@ const Info = ({title, description, image}) => {
             />
             <h2>{title}</h2>
             <p className="opasity-6">{description}</p>
-            <button onClick={() => {setCardOpened(false)}} className="greenButton">
+            <button onClick={() => {setCartOpened(false)}} className="greenButton">
                 <img src="/img/icon-arrow.svg" alt="arrow"/>
                 Вернуться назад
             </button>
