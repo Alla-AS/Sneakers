@@ -13,11 +13,14 @@ const Info = ({title, description, image}) => {
                 alt="empty"
             />
             <h2>{title}</h2>
-            <p className="opasity-6">{description}</p>
-            <button onClick={() => {setCartOpened(false)}} className="greenButton">
-                <img src="/img/icon-arrow.svg" alt="arrow"/>
-                Вернуться назад
-            </button>
+            <p className="mb-40">{description}</p>
+            <div> 
+                <button onClick={() => {setCartOpened(false)}} className="greenButton">
+                    <img src="/img/icon-arrow.svg" alt="arrow"/>
+                    Вернуться назад
+                </button>
+            </div>
+
         </div>
     )
 }

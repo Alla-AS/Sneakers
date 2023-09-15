@@ -41,27 +41,19 @@ function App() {
 
   const onAddToCart = async (obj) => {
     try {
-      const findItem = cartItems.find(item => item.parentId === obj.id);
+      const key = obj.parentId ? 'parentId' : 'id';
+      const findItem = cartItems.find(item => item.parentId === obj[key]);
+      console.log(findItem);
       if (findItem) {
-        setCartItems(prev => prev.filter(item => Number(item.parentId) !== Number(obj.id)));
+        setCartItems(prev => prev.filter(item => Number(item.parentId) !== Number(obj[key])));
+        // console.log(findItem[key]);
         await axios.delete(`https://64f8c8d6824680fd21800ccb.mockapi.io/Cart/${findItem.id}`);
       } else {
-        // setCartItems(prev => [...prev, obj]);
         const {data} = await axios.post('https://64f8c8d6824680fd21800ccb.mockapi.io/Cart', obj);
         setCartItems(prev => [...prev, data]);
-        //   setCartItems(prev => prev.map((item) => {
-        //   if (item.parentId === data.parentId) {
-        //     return {
-        //       ...item,
-        //       id: data.id
-        //     };
-        //     return item;
-        //   }
-        // }
-        // ));
       }
     } catch (error) {
-      alert('Не удалось добавить в корзину');
+      alert('Ошибка при добавлении в корзину');
       console.error(error);
     }
   }
@@ -99,33 +91,37 @@ function App() {
     return cartItems.some((obj) => obj.parentId === id);
   }
 
+  const isFavoritesAdded = (id) => {
+    return favorites.some((obj) => obj.parentId === id);
+  }
+
   return (
-    <AppContext.Provider value={{items, cartItems, favorites, isItemAdded, onAddToFavorite, onAddToCart, setCartOpened, setCartItems, cartItems}}>
+    <AppContext.Provider value={{items, cartItems, favorites, isItemAdded, isFavoritesAdded, onAddToFavorite, onAddToCart, setCartOpened, setCartItems}}>
       <div className='wrapper clear'>
         <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem} opened={cartOpened}/>
         <Header onClickCart={() => setCartOpened(true)}/>
 
-
         <Routes>
           <Route path="/" element={
-            <Home
-              items={items}
-              cartItems={cartItems}
-              searchValue={searchValue}
-              setSearchValue={setSearchValue}
-              onChangeSearchInput={onChangeSearchInput}
-              isLoading={isLoading}
-            />}
+            <>
+              <div className='heading'>
+                <img src='img/heading.jpg' alt='heading'/>
+              </div>
+              
+              <Home
+                items={items}
+                cartItems={cartItems}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                onChangeSearchInput={onChangeSearchInput}
+                isLoading={isLoading}
+              />
+            </>
+}
           />
-        </Routes>
-
-        <Routes>
           <Route path="/favorites" element={
             <Favorites/>}
           />
-        </Routes>
-
-        <Routes>
           <Route path='/orders' element={
             <Orders/>
           }/>

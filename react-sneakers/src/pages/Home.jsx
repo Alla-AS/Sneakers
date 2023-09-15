@@ -11,7 +11,7 @@ function Home({items,
         const filtredItems = items.filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()));
         return (isLoading ? [1, 2, 3, 4, 5, 6, 7, 8] : filtredItems).map((item) => (
             <Card 
-                key={item.id}
+                key={isLoading ? item : `${item.id}home`}
                 loading={isLoading}
                 {...item}
             />

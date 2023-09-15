@@ -36,7 +36,10 @@ header {
   margin: 0;
 }
 
-
+.heading {
+  margin-top: 50px;
+  text-align: center;
+}
 
 
 .favorite {
@@ -196,6 +199,22 @@ h5 {
       opacity: 1;
     }
   }
+}
+
+.cartEmpty {
+  text-align: center;
+  p {
+    opacity: 0.4;
+  }
+
+  button {
+    padding: 10px 40px;
+    img {
+      transform: rotate(180deg);
+      margin-right: 20px;
+    }
+  }
+
 }
 
 @keyframes button-loading {
