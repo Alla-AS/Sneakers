@@ -43,10 +43,8 @@ function App() {
     try {
       const key = obj.parentId ? 'parentId' : 'id';
       const findItem = cartItems.find(item => item.parentId === obj[key]);
-      console.log(findItem);
       if (findItem) {
         setCartItems(prev => prev.filter(item => Number(item.parentId) !== Number(obj[key])));
-        // console.log(findItem[key]);
         await axios.delete(`https://64f8c8d6824680fd21800ccb.mockapi.io/Cart/${findItem.id}`);
       } else {
         const {data} = await axios.post('https://64f8c8d6824680fd21800ccb.mockapi.io/Cart', obj);
