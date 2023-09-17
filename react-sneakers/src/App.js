@@ -91,7 +91,7 @@ function App() {
         <Header onClickCart={() => setCartOpened(true)}/>
 
         <Routes>
-          <Route path="Sneakers" element={
+          <Route path="Sneakers/" element={
             <>
               <div className='heading'>
                 <img src='img/heading.jpg' alt='heading'/>
