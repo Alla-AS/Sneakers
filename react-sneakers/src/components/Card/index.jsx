@@ -2,11 +2,10 @@ import React from 'react';
 import ContentLoader from "react-content-loader"
 import AppContext from '../../context';
 
-
 import styles from './Card.module.scss';
 
 
-function Card({id, parentId, title, price, imageUrl, favorited = false, loading = false, isOrder = false}) {
+export function Card({id, parentId, title, price, imageUrl, favorited = false, loading = false, isOrder = false}) {
     const { isItemAdded, isFavoritesAdded, onAddToFavorite, onAddToCart } = React.useContext(AppContext);
     const [isFavorite, setIsFavorite] = React.useState(favorited);
     const obj = {id, parentId: (parentId !== undefined ? parentId : id), title, price, imageUrl}
@@ -38,7 +37,7 @@ function Card({id, parentId, title, price, imageUrl, favorited = false, loading 
                 </ContentLoader> :
                 <>
                     {!isOrder && <div className='favorite'  onClick={onClickFavorite}>
-                    <img src={isFavoritesAdded(id) || isFavorite ? '/img/icon-heart-like.svg' : '/img/icon-heart-unlike.svg'} alt='icon-heart-unlike'/>
+                    <img src={isFavoritesAdded(id) || isFavorite ? 'img/icon-heart-like.svg' : 'img/icon-heart-unlike.svg'} alt='icon-heart-unlike'/>
                     </div>
                     }
                     <img width={133} height={112} src={imageUrl} alt=''/>
@@ -48,13 +47,16 @@ function Card({id, parentId, title, price, imageUrl, favorited = false, loading 
                             <span>Цена:</span>
                             <b>{price} руб.</b>
                         </div>
-                        {!isOrder && <img className={styles.plus} src={isItemAdded(parentId ? parentId :id) ? '/img/icon-checkmark.svg' : '/img/icon-plus.svg'} alt='icon-plus' onClick={onClickPlus}/>}
+                        {!isOrder && <img
+                            className={styles.plus}
+                            src={isItemAdded(parentId ? parentId : id) ?
+                            'img/icon-checkmark.svg' : 
+                            'img/icon-plus.svg'} 
+                            alt='icon-plus' 
+                            onClick={onClickPlus}/>}
                     </div>
                 </>
             }
         </div>
     )
 }
-
-
-export default Card;

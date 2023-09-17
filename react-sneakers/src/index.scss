@@ -1,11 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lato:wght@400;700&display=swap');
 
+html {
+  // height: 100%;
+}
+
 body {
   margin: 0;
   font-family: 'Inter', system-ui;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #e7f6ff;
+  // height: 100%;
+  // display: flex;
 }
 
 * {
@@ -13,6 +19,7 @@ body {
 }
 
 .wrapper {
+  height: 100%;
   background: #FFFFFF;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.04);
   border-radius: 20px;
@@ -61,15 +68,6 @@ h5 {
   font-weight: 400;
   font-size: 14px;
 }
-
-// .button {
-//   background:  #FFFFFF;
-//   border: 1px solid #F2F2F2;
-//   box-sizing: border-box;
-//   border-radius: 8px;
-//   height: 32px;
-//   width: 32px;
-// }
 
 .search-block {
   border: 1px solid #F3F3F3;
@@ -201,7 +199,14 @@ h5 {
   }
 }
 
-.cartEmpty {
+.info-favorites,
+.info-orders {
+  margin: 25% auto;
+}
+
+.info-block {
+  margin: 0 auto;
+  width: 290px;
   text-align: center;
   p {
     opacity: 0.4;

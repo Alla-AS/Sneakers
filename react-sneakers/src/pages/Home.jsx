@@ -1,7 +1,7 @@
 import React from 'react';
-import Card from '../components/Card';
+import {Card} from '../components/Card';
 
-function Home({items,
+export function Home({items,
     searchValue,
     setSearchValue,
     onChangeSearchInput,
@@ -23,9 +23,19 @@ function Home({items,
             <div className='d-flex align-center justify-between mb-40'>
             <h1>{searchValue ? `Поиск по запросу: "${searchValue}"`: 'Все кроссовки'}</h1>
             <div className='search-block d-flex'>
-                <img src='/img/icon-search.svg' alt='Search'/>
-                {searchValue && <img onClick={() => setSearchValue('')} className='clear cu-p' src='/img/btn-remove-cursor.svg' alt='btn-clear'/>}
-                <input onChange={onChangeSearchInput} value={searchValue} placeholder='Поиск...'/>
+                <img src='img/icon-search.svg' alt='Search'/>
+                {searchValue && 
+                <img 
+                    onClick={() => setSearchValue('')} 
+                    className='clear cu-p' 
+                    src='img/btn-remove-cursor.svg' 
+                    alt='btn-clear'
+                />}
+                <input 
+                    onChange={onChangeSearchInput} 
+                    value={searchValue} 
+                    placeholder='Поиск...'
+                />
             </div>
             </div>
             <div className='cards d-flex'>
@@ -34,6 +44,3 @@ function Home({items,
         </div>
     )
 }
-
-
-export default Home;

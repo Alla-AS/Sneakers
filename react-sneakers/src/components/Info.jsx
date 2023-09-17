@@ -1,28 +1,24 @@
 import React from "react";
-import AppContext from "../context";
+import { Link } from "react-router-dom";
 
-const Info = ({title, description, image}) => {
-  const {setCartOpened} = React.useContext(AppContext);
-
+export const Info = ({title, description, image, onClickButton, link}) => {
     return (
-        <div className="cartEmpty d-flex align-center justify-center flex-column flex">
+        <div className="info-block d-flex align-center justify-center flex-column flex">
             <img
                 className="mb-20"
-                width="120px"
                 src={image}
-                alt="empty"
+                alt="image"
             />
-            <h2>{title}</h2>
+            <h2 className="mb-5 mt-10">{title}</h2>
             <p className="mb-40">{description}</p>
-            <div> 
-                <button onClick={() => {setCartOpened(false)}} className="greenButton">
-                    <img src="/img/icon-arrow.svg" alt="arrow"/>
-                    Вернуться назад
-                </button>
+            <div>
+                <Link to={link}>
+                    <button onClick={onClickButton} className="greenButton">
+                        <img src="img/icon-arrow.svg" alt="arrow"/>
+                        Вернуться назад
+                    </button>
+                </Link>
             </div>
-
         </div>
     )
 }
-
-export default Info;
