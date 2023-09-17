@@ -7,7 +7,7 @@ export function Header(props) {
 
     return (
         <header className='d-flex justify-between align-center p-40'>
-          <Link to=''>
+          <Link to='Sneakers'>
             <div className='d-flex align-center'>
               <img width={40}
                 height={40} 
@@ -32,7 +32,7 @@ export function Header(props) {
             <span>{totalPrice} руб.</span>
           </li>
           <li className='mr-15 cu-p'>
-            <Link to='favorites'>
+            <Link to='Sneakers/favorites'>
               <img 
                 width={20} 
                 height={20} 
@@ -42,7 +42,7 @@ export function Header(props) {
             </Link>
           </li>
           <li>
-            <Link to='orders'>
+            <Link to='Sneakers/orders'>
               <img 
                 width={20} 
                 height={20} 
