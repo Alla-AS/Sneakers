@@ -91,7 +91,7 @@ function App() {
         <Header onClickCart={() => setCartOpened(true)}/>
 
         <Routes>
-          <Route path="Sneakers" element={
+          <Route path="" element={
             <>
               <div className='heading'>
                 <img src='img/heading.jpg' alt='heading'/>
@@ -107,10 +107,10 @@ function App() {
               />
             </>
           }/>
-          <Route path="Sneakers/favorites" element={
+          <Route path="favorites" element={
             <Favorites/>
           }/>
-          <Route path='Sneakers/orders' element={
+          <Route path='orders' element={
             <Orders/>
           }/>
         </Routes>
