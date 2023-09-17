@@ -44,7 +44,7 @@ export function Orders() {
                         title={'У вас нет заказов'}
                         description={'Вернитесь на главную, там много всего интересного'}
                         image={'img/smile-favorites.jpg'}
-                        link={'Sneakers/'}
+                        link={'..'}
                     />
                 </div>
 

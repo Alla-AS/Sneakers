@@ -12,7 +12,7 @@ export const Info = ({title, description, image, onClickButton, link}) => {
             <h2 className="mb-5 mt-10">{title}</h2>
             <p className="mb-40">{description}</p>
             <div>
-                <Link to="/">
+                <Link to={link}>
                     <button onClick={onClickButton} className="greenButton">
                         <img src="img/icon-arrow.svg" alt="arrow"/>
                         Вернуться назад

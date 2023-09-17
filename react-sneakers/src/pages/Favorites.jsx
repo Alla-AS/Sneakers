@@ -25,7 +25,7 @@ export function Favorites() {
                         title={'Закладок нет :('}
                         description={'Вы ничего не добавляли в закладки'}
                         image={'img/smile-favorites.jpg'}
-                        link={'Sneakers/'}
+                        link={'..'}
                     />
                 </div>
             }
