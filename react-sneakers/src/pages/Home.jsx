@@ -20,7 +20,7 @@ export function Home({items,
         
     return (
         <div className='content p-40'>
-            <div className='d-flex align-center justify-between mb-40'>
+            <div className='d-flex align-center justify-between mb-40 content-input'>
             <h1>{searchValue ? `Поиск по запросу: "${searchValue}"`: 'Все кроссовки'}</h1>
             <div className='search-block d-flex'>
                 <img src='img/icon-search.svg' alt='Search'/>

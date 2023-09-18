@@ -44,9 +44,21 @@ header {
 }
 
 .heading {
-  margin-top: 50px;
-  text-align: center;
+  // margin: 50px auto 0px;
+  // text-align: center;
+
+  img {
+    margin: 50px auto 0px;
+    width: 90%;
+    border-radius: 20px;
+  }
+
+  img:last-child {
+    display: none;
+  }
 }
+
+
 
 
 .favorite {
@@ -86,7 +98,7 @@ h5 {
     border: none;
     padding: 13px;
     font-size: 16px;
-    widows: 200px;
+    width: 100%;
   }
 }
 
@@ -233,4 +245,29 @@ h5 {
     opacity: 1;
   }
 
+}
+
+@media (max-width: 376px) {
+  header {
+    flex-direction: column;
+    gap: 50px;
+  }
+
+  .heading {
+    img:first-child {
+      display: none;
+    }
+    img:last-child {
+      display: block;
+    }
+  }
+
+  .content-input {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .cards {
+    justify-content: space-around;
+  }
 }

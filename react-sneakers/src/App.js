@@ -95,6 +95,7 @@ function App() {
             <>
               <div className='heading'>
                 <img src='img/heading.jpg' alt='heading'/>
+                <img src='img/heading-mobile.jpg' alt='heading-mobile'/>
               </div>
               
               <Home
